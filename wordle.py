@@ -1,9 +1,10 @@
 from collections import Counter
 
 class Wordle(object):
-    def __init__(self, wordlist_filename):
+    def __init__(self, wordlist_filename, set_guesses=[]):
         self.words = self.load(wordlist_filename)
         self.guessed_letters = set()
+        self.set_guesses = {i:g for i,g in enumerate(set_guesses)}
 
     def load(self, filename):
         return [w.strip() for w in open(filename) if len(w.strip()) == 5]
@@ -29,17 +30,18 @@ class Wordle(object):
         scores = [(word, sum(counts[c] for c in list(set(word)))) for word in self.words]
         scores.sort(key=lambda x: x[1], reverse=True)
         recommendation = scores[0][0]
-        print(f"Recommended: {recommendation}")
         return recommendation
 
     def interactive_solve(self):
-        while True:
-            rec = wordle.recommend()
+        for i in range(6):
+            rec = self.set_guesses.get(i,wordle.recommend())
+            print(f"Recommended: {rec}")
             result = input()
             if result.upper() == result and set("_ ").isdisjoint(result):
+                print("You won!")
                 break
             wordle.refine(rec, result)
 
 if __name__ == "__main__":
-    wordle = Wordle("words_en.txt")
+    wordle = Wordle("words_en.txt", ["arose","until"])
     wordle.interactive_solve()
