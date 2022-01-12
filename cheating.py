@@ -1,0 +1,1 @@
+import urllib.request, datetime, re; print(re.search('La=\[(.+?)\],Ta', urllib.request.urlopen(urllib.request.Request('https://www.powerlanguage.co.uk/wordle/main.c1506a22.js', headers={'User-Agent': 'Mozilla/5.0'})).read().decode('UTF-8')).group(1).replace('"', '').split(',')[(datetime.date.today() - datetime.date(2021,6,19)).days])
